@@ -1,4 +1,4 @@
-package main
+package concurrentmap
 
 
 // ConcurrentOrderedMap provides a thread-safe map implementation that preserves
