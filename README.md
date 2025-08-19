@@ -2,7 +2,7 @@
 ConcurrentOrderedMap provides a thread-safe map implementation that preserves insertion order. It combines the safety of synchronized access with predictable iteration order, making it suitable for concurrent environments where key ordering matters
 
 # Install
-- go get github.com/Dsouza10082/ConcurrentOrderedMap@v1.0.1
+- go get github.com/Dsouza10082/ConcurrentOrderedMap@v1.0.3
 
 # Use cases:
 - Concurrent access patterns with deterministic iteration requirements
