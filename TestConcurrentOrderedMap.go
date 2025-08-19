@@ -1,4 +1,4 @@
-package main
+package concurrentmap
 
 func TestConcurrentAccess(t *testing.T) {
     m := NewConcurrentOrderedMap[int, string]()
