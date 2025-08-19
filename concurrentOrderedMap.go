@@ -1,11 +1,5 @@
 package main
 
-import (
-	"errors"
-	"reflect"
-	"sort"
-	"sync"
-)
 
 // ConcurrentOrderedMap provides a thread-safe map implementation that preserves
 // insertion order. It combines the safety of synchronized access with predictable
@@ -25,6 +19,12 @@ import (
 // Author: Dsouza
 // License: MIT
 
+import (
+	"errors"
+	"reflect"
+	"sort"
+	"sync"
+)
 
 type ConcurrentOrderedMap[K comparable, V any] struct {
 	sync.RWMutex
