@@ -1,3 +1,6 @@
+
+<img width="1536" height="1024" alt="gopher_doing_multiple_things_strong" src="https://github.com/user-attachments/assets/9cc7a8a4-9932-4bc6-8caf-fbf4e30b5866" />
+
 # ConcurrentOrderedMap
 ConcurrentOrderedMap provides a thread-safe map implementation that preserves insertion order. It combines the safety of synchronized access with predictable iteration order, making it suitable for concurrent environments where key ordering matters
 
