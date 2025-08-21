@@ -1,0 +1,238 @@
+=== RUN   TestConnectionSingleton
+2025/08/20 21:57:07 Connection pool initialized with 10 connections
+--- PASS: TestConnectionSingleton (0.09s)
+=== RUN   TestConnectionConcurrentSingleton
+--- PASS: TestConnectionConcurrentSingleton (0.00s)
+=== RUN   TestInstanceConnectionCreation
+--- PASS: TestInstanceConnectionCreation (0.00s)
+=== RUN   TestConnectionGetAndReleaseConnection
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained from pool
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+--- PASS: TestConnectionGetAndReleaseConnection (0.00s)
+=== RUN   TestConnectionConcurrentAccess
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained from pool
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 obtained from pool
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 obtained from pool
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 obtained from pool
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 obtained from pool
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 obtained from pool
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 obtained from pool
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 obtained from pool
+2025/08/20 21:57:07 Connection conn_10_1755723427708913000 obtained from pool
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 obtained from pool
+2025/08/20 21:57:07 New connection conn_11_1755723427729530000 created on demand (total: 11/20)
+2025/08/20 21:57:07 New connection conn_12_1755723427732887000 created on demand (total: 12/20)
+2025/08/20 21:57:07 New connection conn_13_1755723427732911000 created on demand (total: 13/20)
+2025/08/20 21:57:07 New connection conn_14_1755723427732943000 created on demand (total: 14/20)
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 released
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 released
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 released
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 released
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 released
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 released
+2025/08/20 21:57:07 New connection conn_15_1755723427735059000 created on demand (total: 15/20)
+2025/08/20 21:57:07 Connection conn_10_1755723427708913000 released
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 released
+2025/08/20 21:57:07 New connection conn_16_1755723427736708000 created on demand (total: 16/20)
+2025/08/20 21:57:07 New connection conn_17_1755723427736727000 created on demand (total: 17/20)
+2025/08/20 21:57:07 New connection conn_18_1755723427736757000 created on demand (total: 18/20)
+2025/08/20 21:57:07 New connection conn_19_1755723427736953000 created on demand (total: 19/20)
+2025/08/20 21:57:07 New connection conn_20_1755723427736956000 created on demand (total: 20/20)
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_21_1755723427736966000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_22_1755723427743031000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_23_1755723427746707000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_11_1755723427729530000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_24_1755723427748036000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_25_1755723427753544000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_26_1755723427753582000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_18_1755723427736757000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_27_1755723427755259000
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_29_1755723427755263000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_17_1755723427736727000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_30_1755723427755290000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_28_1755723427755261000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_20_1755723427736956000 released
+2025/08/20 21:57:07 Connection conn_15_1755723427735059000 released
+2025/08/20 21:57:07 Connection conn_16_1755723427736708000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_31_1755723427756631000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_13_1755723427732911000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_32_1755723427756651000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_12_1755723427732887000 released
+2025/08/20 21:57:07 Connection conn_14_1755723427732943000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_33_1755723427760044000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_19_1755723427736953000 released
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_34_1755723427761222000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_35_1755723427761251000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_36_1755723427762745000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_37_1755723427763119000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_38_1755723427763825000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_39_1755723427763829000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_40_1755723427765290000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_41_1755723427765310000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_42_1755723427765334000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_43_1755723427765960000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_44_1755723427769385000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_45_1755723427769420000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_46_1755723427769641000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_49_1755723427771816000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_48_1755723427771815000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_50_1755723427772059000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Maximum connections reached while creating new connection, closing conn_47_1755723427771807000
+2025/08/20 21:57:07 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 released
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_10_1755723427708913000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_11_1755723427729530000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_12_1755723427732887000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_13_1755723427732911000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_14_1755723427732943000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_15_1755723427735059000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 released
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 released
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_16_1755723427736708000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_17_1755723427736727000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 released
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 released
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 released
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 released
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 released
+2025/08/20 21:57:07 Connection conn_10_1755723427708913000 released
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 released
+2025/08/20 21:57:07 Connection conn_11_1755723427729530000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 obtained after waiting
+2025/08/20 21:57:07 Connection conn_12_1755723427732887000 released
+2025/08/20 21:57:07 Connection conn_13_1755723427732911000 released
+2025/08/20 21:57:07 Connection conn_15_1755723427735059000 released
+2025/08/20 21:57:07 Connection conn_14_1755723427732943000 released
+2025/08/20 21:57:07 Connection conn_5_1755723427672836000 released
+2025/08/20 21:57:07 Connection conn_4_1755723427666815000 released
+2025/08/20 21:57:07 Connection conn_16_1755723427736708000 released
+2025/08/20 21:57:07 Connection conn_17_1755723427736727000 released
+2025/08/20 21:57:07 Connection conn_7_1755723427686938000 released
+2025/08/20 21:57:07 Connection conn_6_1755723427679704000 released
+2025/08/20 21:57:07 Connection conn_2_1755723427651878000 released
+2025/08/20 21:57:07 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:07 Connection conn_3_1755723427661674000 released
+2025/08/20 21:57:07 Connection conn_9_1755723427700798000 released
+2025/08/20 21:57:07 Connection conn_8_1755723427694967000 released
+--- PASS: TestConnectionConcurrentAccess (0.12s)
+=== RUN   TestInstanceConnectionExpiration
+2025/08/20 21:57:07 Expire connections requested
+2025/08/20 21:57:07 Request to expire old connections
+    connection_test.go:133: Connections before: 20, after: 20
+--- PASS: TestInstanceConnectionExpiration (2.00s)
+=== RUN   TestInstanceMaxConnections
+2025/08/20 21:57:09 Connection conn_1_1755723427642344000 obtained from pool
+2025/08/20 21:57:09 Connection conn_2_1755723427651878000 obtained from pool
+2025/08/20 21:57:09 Connection conn_3_1755723427661674000 obtained from pool
+2025/08/20 21:57:09 Connection conn_4_1755723427666815000 obtained from pool
+2025/08/20 21:57:09 Connection conn_5_1755723427672836000 obtained from pool
+2025/08/20 21:57:09 Connection conn_6_1755723427679704000 obtained from pool
+2025/08/20 21:57:09 Connection conn_7_1755723427686938000 obtained from pool
+2025/08/20 21:57:09 Connection conn_8_1755723427694967000 obtained from pool
+2025/08/20 21:57:09 Connection conn_9_1755723427700798000 obtained from pool
+2025/08/20 21:57:09 Connection conn_10_1755723427708913000 obtained from pool
+2025/08/20 21:57:09 Connection conn_11_1755723427729530000 obtained from pool
+2025/08/20 21:57:09 Connection conn_12_1755723427732887000 obtained from pool
+2025/08/20 21:57:09 Connection conn_13_1755723427732911000 obtained from pool
+2025/08/20 21:57:09 Connection conn_14_1755723427732943000 obtained from pool
+2025/08/20 21:57:09 Connection conn_15_1755723427735059000 obtained from pool
+2025/08/20 21:57:09 Connection conn_16_1755723427736708000 obtained from pool
+2025/08/20 21:57:09 Connection conn_17_1755723427736727000 obtained from pool
+2025/08/20 21:57:09 Connection conn_18_1755723427736757000 obtained from pool
+2025/08/20 21:57:09 Connection conn_19_1755723427736953000 obtained from pool
+2025/08/20 21:57:09 Connection conn_20_1755723427736956000 obtained from pool
+2025/08/20 21:57:09 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:09 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:10 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:10 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:10 Pool at maximum limit (20/20), waiting for available connection...
+2025/08/20 21:57:10 Connection conn_1_1755723427642344000 released
+2025/08/20 21:57:10 Connection conn_2_1755723427651878000 released
+2025/08/20 21:57:10 Connection conn_3_1755723427661674000 released
+2025/08/20 21:57:10 Connection conn_4_1755723427666815000 released
+2025/08/20 21:57:10 Connection conn_5_1755723427672836000 released
+2025/08/20 21:57:10 Connection conn_6_1755723427679704000 released
+2025/08/20 21:57:10 Connection conn_7_1755723427686938000 released
+2025/08/20 21:57:10 Connection conn_8_1755723427694967000 released
+2025/08/20 21:57:10 Connection conn_9_1755723427700798000 released
+2025/08/20 21:57:10 Connection conn_10_1755723427708913000 released
+2025/08/20 21:57:10 Connection conn_11_1755723427729530000 released
+2025/08/20 21:57:10 Connection conn_12_1755723427732887000 released
+2025/08/20 21:57:10 Connection conn_13_1755723427732911000 released
+2025/08/20 21:57:10 Connection conn_14_1755723427732943000 released
+2025/08/20 21:57:10 Connection conn_15_1755723427735059000 released
+2025/08/20 21:57:10 Connection conn_16_1755723427736708000 released
+2025/08/20 21:57:10 Connection conn_17_1755723427736727000 released
+2025/08/20 21:57:10 Connection conn_18_1755723427736757000 released
+2025/08/20 21:57:10 Connection conn_19_1755723427736953000 released
+2025/08/20 21:57:10 Connection conn_20_1755723427736956000 released
+    connection_test.go:156: Obtained 20 connections out of a maximum of 20
+--- PASS: TestInstanceMaxConnections (0.51s)
+=== RUN   TestInstancePoolReset
+2025/08/20 21:57:10 Connection conn_1_1755723427642344000 obtained from pool
+2025/08/20 21:57:10 Resetting connection pool...
+2025/08/20 21:57:10 Pool reset with 10 connections
+2025/08/20 21:57:10 Connection conn_51_1755723430351745000 obtained from pool
+2025/08/20 21:57:10 Connection conn_51_1755723430351745000 released
+--- PASS: TestInstancePoolReset (0.05s)
+=== RUN   TestInstanceConnectionValidation
+2025/08/20 21:57:10 Connection conn_51_1755723430351745000 obtained from pool
+2025/08/20 21:57:10 Connection conn_51_1755723430351745000 released
+--- PASS: TestInstanceConnectionValidation (0.00s)
+PASS
