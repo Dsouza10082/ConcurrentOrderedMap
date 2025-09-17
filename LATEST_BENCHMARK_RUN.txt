@@ -1,0 +1,21 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/Dsouza10082/ConcurrentOrderedMap
+cpu: Apple M3 Pro
+Benchmark_Filtered_Levenshtein-12                     22          49186242 ns/op        22464089 B/op     109859 allocs/op
+Benchmark_Filtered_DamerauLevenshtein-12              20          64919181 ns/op        28813640 B/op     164786 allocs/op
+Benchmark_Filtered_JaroWinkler-12                     21          58189522 ns/op        11527197 B/op     109859 allocs/op
+Benchmark_Filtered_CosineTFIDF-12                     19          53775954 ns/op        54108354 B/op     275188 allocs/op
+Benchmark_Filtered_Soundex-12                         28          36193539 ns/op        12422251 B/op     219713 allocs/op
+Benchmark_Filtered_JaccardNGrams-12                   13          87486186 ns/op        63250080 B/op     310360 allocs/op
+Benchmark_Filtered_Combined-12                         6         191958306 ns/op        131313101 B/op   1079886 allocs/op
+
+
+For Vector search
+Key was created with value: {ID:100 Name: Score:0}
+goos: darwin
+goarch: arm64
+pkg: github.com/Dsouza10082/ConcurrentOrderedMap
+cpu: Apple M3 Pro
+Benchmark_VectorOnly_Filtered-12                     183           6239353 ns/op          311392 B/op          5 allocs/op
+Benchmark_VectorCombined_Filtered-12                  62          19327757 ns/op        11762072 B/op      84765 allocs/op
