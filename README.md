@@ -250,13 +250,6 @@ fmt.Println(map.Len()) // Output: 3
 - The map is locked for reading during the operation, ensuring thread-safety
 - The operation is thread-safe and can be used concurrently by multiple goroutines
 
-
-
-# Author: Dsouza
-# License: MIT
-
----
-
 # Similarity & Search Extensions
 
 This library now includes a rich set of **string similarity** and **vector similarity** order/filter helpers that work on top of `ConcurrentOrderedMap`. These helpers keep the core guarantees (thread-safety + deterministic/stable ordering) while letting you rank results by how close they are to a target query.
@@ -532,3 +525,8 @@ SIM_BENCH_VEC_ITEMS=200000 go test -bench=Vector -benchmem ./...
 
 > Tip: Start with 10k–50k locally and scale up. The **Combined** and **Vector+Text** variants do more work per item and will be the slowest but most accurate.
 
+
+# Author: Dsouza
+# License: MIT
+
+---
