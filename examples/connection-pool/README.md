@@ -1,4 +1,4 @@
-# Connection Pool Implementation - Technical Documentation
+# Connection Pool Implementation - Technical Documentation optimized for Postgres18
 
 ## Executive Summary
 

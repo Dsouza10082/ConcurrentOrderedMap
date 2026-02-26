@@ -13,6 +13,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	PG_CONNECTION        = "postgres://USER:PASS@HOST:PORT/DATABASE?sslmode=disable"
+	PG_USERNAME          = "USERNAME"
+	PG_PASSWORD          = "PASSWORD"
+	MAX_CONNECTIONS      = 20
+	MIN_CONNECTIONS      = 10
+	CONNECTION_LIFE_TIME = 60
+)
+
 type PooledConnection struct {
 	DB        *sqlx.DB
 	CreatedAt time.Time
@@ -26,12 +35,16 @@ type ConnectionInstance struct {
 	created             time.Time
 	connections         *concurrentmap.ConcurrentOrderedMap[string, *PooledConnection]
 	availableCount      int32
-	config              *ConfigInstance
+	DBHost              string
+	MinConnections      int
+	MaxConnections      int
+	ConnectionLifeTime  int
 	expireConnectionsCh chan bool
 	renewConnectionsCh  chan bool
 	stopCh              chan bool
 	wg                  sync.WaitGroup
 	connectionCounter   int
+	Verbose             bool
 }
 
 var (
@@ -41,26 +54,29 @@ var (
 
 func GetConnectionInstance() *ConnectionInstance {
 	once.Do(func() {
-		instance = newConnectionInstance()
+		instance = newConnectionInstance(PG_CONNECTION, MIN_CONNECTIONS, MAX_CONNECTIONS, CONNECTION_LIFE_TIME)
 	})
 	return instance
 }
 
-func newConnectionInstance() *ConnectionInstance {
-	config := NewConfigInstance()
+func newConnectionInstance(DBHost string, MinConnections, MaxConnections, ConnectionLifeTime int) *ConnectionInstance {
 
 	connInst := &ConnectionInstance{
 		created:             time.Now(),
-		connections:         concurrentmap.NewConcurrentOrderedMapWithCapacity[string, *PooledConnection](config.MaxConnections),
+		connections:         concurrentmap.NewConcurrentOrderedMapWithCapacity[string, *PooledConnection](MaxConnections),
 		availableCount:      0,
-		config:              config,
+		DBHost:              DBHost,
+		MinConnections:      MinConnections,
+		MaxConnections:      MaxConnections,
+		ConnectionLifeTime:  ConnectionLifeTime,
 		expireConnectionsCh: make(chan bool, 1),
 		renewConnectionsCh:  make(chan bool, 1),
 		stopCh:              make(chan bool),
 		connectionCounter:   0,
+		Verbose:             false,
 	}
 
-	for i := 0; i < config.MinConnections; i++ {
+	for i := 0; i < MinConnections; i++ {
 		conn, err := connInst.createConnection()
 		if err != nil {
 			log.Printf("Error creating initial connection %d: %v", i, err)
@@ -77,8 +93,12 @@ func newConnectionInstance() *ConnectionInstance {
 	return connInst
 }
 
+func (c *ConnectionInstance) SetVerbose(verbose bool) {
+	c.Verbose = verbose
+}
+
 func (c *ConnectionInstance) createConnection() (*PooledConnection, error) {
-	db, err := sqlx.Open("pgx", c.config.DatabaseHost)
+	db, err := sqlx.Open("pgx", c.DBHost)
 	if err != nil {
 		return nil, fmt.Errorf("error opening connection: %w", err)
 	}
@@ -114,9 +134,11 @@ func (c *ConnectionInstance) IsConnectionValid(conn *PooledConnection) bool {
 		return false
 	}
 
-	connectionLifeTime := time.Duration(c.config.ConnectionLifeTime) * time.Second
+	connectionLifeTime := time.Duration(c.ConnectionLifeTime) * time.Second
 	if time.Since(conn.CreatedAt) > connectionLifeTime {
-		log.Printf("Connection %s expired due to lifetime", conn.ID)
+		if c.Verbose {
+			log.Printf("Connection %s expired due to lifetime", conn.ID)
+		}
 		return false
 	}
 
@@ -126,7 +148,9 @@ func (c *ConnectionInstance) IsConnectionValid(conn *PooledConnection) bool {
 		defer cancel()
 
 		if err := conn.DB.PingContext(ctx); err != nil {
-			log.Printf("Connection %s failed ping: %v", conn.ID, err)
+			if c.Verbose {
+				log.Printf("Connection %s failed ping: %v", conn.ID, err)
+			}
 			return false
 		}
 	}
@@ -193,16 +217,18 @@ func (c *ConnectionInstance) performMaintenance() {
 
 	c.availableCount = int32(availableCount)
 
-	log.Printf("Pool Status - Total: %d, Valid: %d, Available: %d, In use: %d, Expired: %d",
-		c.connections.Len(), validCount, availableCount, inUseCount, expiredCount)
+	if c.Verbose {
+		log.Printf("Pool Status - Total: %d, Valid: %d, Available: %d, In use: %d, Expired: %d",
+			c.connections.Len(), validCount, availableCount, inUseCount, expiredCount)
+	}
 
-	if validCount < c.config.MinConnections {
+	if validCount < c.MinConnections {
 		go c.ensureMinimumConnections()
 	}
 }
 
 func (c *ConnectionInstance) expireOldConnections() {
-	connectionLifeTime := time.Duration(c.config.ConnectionLifeTime) * time.Second
+	connectionLifeTime := time.Duration(c.ConnectionLifeTime) * time.Second
 	toRemove := make([]string, 0)
 
 	orderedPairs := c.connections.GetOrderedV2()
@@ -212,7 +238,9 @@ func (c *ConnectionInstance) expireOldConnections() {
 		if time.Since(conn.CreatedAt) > connectionLifeTime {
 			conn.DB.Close()
 			toRemove = append(toRemove, pair.Key)
-			log.Printf("Connection %s forcibly expired", conn.ID)
+			if c.Verbose {
+				log.Printf("Connection %s forcibly expired", conn.ID)
+			}
 		}
 	}
 
@@ -223,24 +251,30 @@ func (c *ConnectionInstance) expireOldConnections() {
 
 func (c *ConnectionInstance) ensureMinimumConnections() {
 	currentCount := c.connections.Len()
-	needed := c.config.MinConnections - currentCount
+	needed := c.MinConnections - currentCount
 
 	if needed <= 0 {
 		return
 	}
 
-	log.Printf("Creating %d connections to reach minimum", needed)
+	if c.Verbose {
+		log.Printf("Creating %d connections to reach minimum", needed)
+	}
 
 	for i := 0; i < needed; i++ {
 		conn, err := c.createConnection()
 		if err != nil {
-			log.Printf("Error creating replacement connection: %v", err)
+			if c.Verbose {
+				log.Printf("Error creating replacement connection: %v", err)
+			}
 			continue
 		}
 
 		c.connections.Set(conn.ID, conn)
 		c.availableCount++
-		log.Printf("New connection %s added to pool", conn.ID)
+		if c.Verbose {
+			log.Printf("New connection %s added to pool", conn.ID)
+		}
 	}
 }
 
@@ -248,30 +282,36 @@ func (c *ConnectionInstance) ensureMaximumConnections() {
 	// Lock to prevent race conditions when checking and adding connections
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	currentCount := c.connections.Len()
-	needed := c.config.MaxConnections - currentCount
+	needed := c.MaxConnections - currentCount
 
 	if needed <= 0 {
-		log.Printf("Pool already at maximum (%d connections)", currentCount)
+		if c.Verbose {
+			log.Printf("Pool already at maximum (%d connections)", currentCount)
+		}
 		return
 	}
 
-	log.Printf("Creating %d additional connections", needed)
+	if c.Verbose {
+		log.Printf("Creating %d additional connections", needed)
+	}
 
 	for i := 0; i < needed; i++ {
 		// Check again inside the loop to ensure we don't exceed max
 		currentCount = c.connections.Len()
-		if currentCount >= c.config.MaxConnections {
-			log.Printf("Reached maximum connections during creation")
+		if currentCount >= c.MaxConnections {
+			if c.Verbose {
+				log.Printf("Reached maximum connections during creation")
+			}
 			break
 		}
-		
+
 		// Temporarily unlock for connection creation (which may take time)
 		c.mu.Unlock()
 		conn, err := c.createConnection()
 		c.mu.Lock()
-		
+
 		if err != nil {
 			log.Printf("Error creating additional connection: %v", err)
 			continue
@@ -279,21 +319,25 @@ func (c *ConnectionInstance) ensureMaximumConnections() {
 
 		// Double-check we haven't exceeded max while creating the connection
 		currentCount = c.connections.Len()
-		if currentCount >= c.config.MaxConnections {
+		if currentCount >= c.MaxConnections {
 			conn.DB.Close()
-			log.Printf("Maximum connections reached, closing excess connection %s", conn.ID)
+			if c.Verbose {
+				log.Printf("Maximum connections reached, closing excess connection %s", conn.ID)
+			}
 			break
 		}
 
 		c.connections.Set(conn.ID, conn)
-		c.availableCount++
-		log.Printf("Additional connection %s created", conn.ID)
+		c.availableCount++	
+		if c.Verbose {
+			log.Printf("Additional connection %s created", conn.ID)
+		}
 	}
 }
 
 func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error) {
 	c.mu.RLock()
-	maxConnections := c.config.MaxConnections
+	maxConnections := c.MaxConnections
 	c.mu.RUnlock()
 
 	orderedPairs := c.connections.GetOrderedV2()
@@ -318,7 +362,9 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 			})
 
 			if err == nil {
-				log.Printf("Connection %s obtained from pool", conn.ID)
+				if c.Verbose {
+					log.Printf("Connection %s obtained from pool", conn.ID)
+				}
 				return conn.DB, nil
 			}
 		}
@@ -330,15 +376,15 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 		c.mu.Lock()
 		// Double-check after acquiring lock
 		currentCount = c.connections.Len()
-		if currentCount < c.config.MaxConnections {
+		if currentCount < c.MaxConnections {
 			// Keep the lock while creating and adding the connection
 			// to prevent race conditions
-			
+
 			// Temporarily unlock for connection creation (which may take time)
 			c.mu.Unlock()
 			newConn, err := c.createConnection()
 			c.mu.Lock()
-			
+
 			if err != nil {
 				c.mu.Unlock()
 				return nil, fmt.Errorf("pool exhausted and could not create new connection: %w", err)
@@ -346,10 +392,12 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 
 			// Double-check we haven't exceeded max while creating the connection
 			currentCount = c.connections.Len()
-			if currentCount >= c.config.MaxConnections {
+			if currentCount >= c.MaxConnections {
 				c.mu.Unlock()
 				newConn.DB.Close()
-				log.Printf("Maximum connections reached while creating new connection, closing %s", newConn.ID)
+				if c.Verbose {
+					log.Printf("Maximum connections reached while creating new connection, closing %s", newConn.ID)
+				}
 				// Fall through to waiting logic
 			} else {
 				newConn.InUse = true
@@ -358,7 +406,9 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 				actualCount := c.connections.Len()
 				c.mu.Unlock()
 
-				log.Printf("New connection %s created on demand (total: %d/%d)", newConn.ID, actualCount, maxConnections)
+				if c.Verbose {
+					log.Printf("New connection %s created on demand (total: %d/%d)", newConn.ID, actualCount, maxConnections)
+				}
 				return newConn.DB, nil
 			}
 		} else {
@@ -367,7 +417,9 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 	}
 
 	// If we get here, pool is at max capacity, wait for available connection
-	log.Printf("Pool at maximum limit (%d/%d), waiting for available connection...", c.connections.Len(), maxConnections)
+	if c.Verbose {
+		log.Printf("Pool at maximum limit (%d/%d), waiting for available connection...", c.connections.Len(), maxConnections)
+	}
 
 	deadline, hasDeadline := ctx.Deadline()
 	if hasDeadline && time.Until(deadline) < 50*time.Millisecond {
@@ -403,7 +455,9 @@ func (c *ConnectionInstance) GetConnection(ctx context.Context) (*sqlx.DB, error
 					})
 
 					if err == nil {
-						log.Printf("Connection %s obtained after waiting", conn.ID)
+						if c.Verbose {
+							log.Printf("Connection %s obtained after waiting", conn.ID)
+						}
 						return conn.DB, nil
 					}
 				}
@@ -436,7 +490,9 @@ func (c *ConnectionInstance) ReleaseConnection(db *sqlx.DB) error {
 				return fmt.Errorf("error releasing connection %s: %w", conn.ID, err)
 			}
 
-			log.Printf("Connection %s released", conn.ID)
+			if c.Verbose {
+				log.Printf("Connection %s released", conn.ID)
+			}
 			return nil
 		}
 	}
@@ -455,7 +511,9 @@ func (c *ConnectionInstance) Close() {
 		conn := pair.Value
 		if conn.DB != nil {
 			conn.DB.Close()
-			log.Printf("Connection %s closed", conn.ID)
+			if c.Verbose {
+				log.Printf("Connection %s closed", conn.ID)
+			}
 		}
 	}
 
@@ -463,7 +521,9 @@ func (c *ConnectionInstance) Close() {
 		c.connections.Delete(pair.Key)
 	}
 
-	log.Println("Connection pool closed")
+	if c.Verbose {
+		log.Println("Connection pool closed")
+	}
 }
 
 func (c *ConnectionInstance) GetPoolStats() map[string]interface{} {
@@ -485,8 +545,8 @@ func (c *ConnectionInstance) GetPoolStats() map[string]interface{} {
 	stats["total"] = total
 	stats["available"] = available
 	stats["in_use"] = inUse
-	stats["min_connections"] = c.config.MinConnections
-	stats["max_connections"] = c.config.MaxConnections
+	stats["min_connections"] = c.MinConnections
+	stats["max_connections"] = c.MaxConnections
 	stats["uptime_seconds"] = time.Since(c.created).Seconds()
 
 	connections := make([]map[string]interface{}, 0)
@@ -537,16 +597,20 @@ func (c *ConnectionInstance) ResetPool() error {
 		c.connections.Delete(pair.Key)
 	}
 
-	for i := 0; i < c.config.MinConnections; i++ {
+	for i := 0; i < c.MinConnections; i++ {
 		conn, err := c.createConnection()
 		if err != nil {
-			log.Printf("Error recreating connection %d: %v", i, err)
+			if c.Verbose {
+				log.Printf("Error recreating connection %d: %v", i, err)
+			}
 			continue
 		}
 		c.connections.Set(conn.ID, conn)
 	}
 
-	c.availableCount = int32(c.config.MinConnections)
-	log.Printf("Pool reset with %d connections", c.connections.Len())
+	c.availableCount = int32(c.MinConnections)
+	if c.Verbose {
+		log.Printf("Pool reset with %d connections", c.connections.Len())
+	}
 	return nil
 }

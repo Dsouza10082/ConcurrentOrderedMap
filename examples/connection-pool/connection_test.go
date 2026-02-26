@@ -11,21 +11,21 @@ import (
 )
 
 func TestConnectionSingleton(t *testing.T) {
-	instance1 := model.GetConnectionInstance()
-	instance2 := model.GetConnectionInstance()
+	instance1 := GetConnectionInstance()
+	instance2 := GetConnectionInstance()
 	if instance1 != instance2 {
 		t.Error("GetConnectionInstance is not returning the same instance (singleton failed)")
 	}
 }
 
 func TestConnectionConcurrentSingleton(t *testing.T) {
-	instances := make([]*model.ConnectionInstance, 100)
+	instances := make([]*ConnectionInstance, 100)
 	var wg sync.WaitGroup
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func(index int) {
 			defer wg.Done()
-			instances[index] = model.GetConnectionInstance()
+			instances[index] = GetConnectionInstance()
 		}(i)
 	}
 	wg.Wait()
@@ -38,7 +38,7 @@ func TestConnectionConcurrentSingleton(t *testing.T) {
 }
 
 func TestInstanceConnectionCreation(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	stats := pool.GetPoolStats()
 	total, ok := stats["total"].(int)
 	if !ok {
@@ -54,7 +54,7 @@ func TestInstanceConnectionCreation(t *testing.T) {
 }
 
 func TestConnectionGetAndReleaseConnection(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	ctx := context.Background()
 	db, err := pool.GetConnection(ctx)
 	if err != nil {
@@ -81,7 +81,7 @@ func TestConnectionGetAndReleaseConnection(t *testing.T) {
 }
 
 func TestConnectionConcurrentAccess(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	var wg sync.WaitGroup
 	errors := make(chan error, 50)
 	for i := 0; i < 50; i++ {
@@ -119,7 +119,7 @@ func TestConnectionConcurrentAccess(t *testing.T) {
 }
 
 func TestInstanceConnectionExpiration(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	statsInitial := pool.GetPoolStats()
 	totalInitial, _ := statsInitial["total"].(int)
 	pool.TriggerExpireConnections()
@@ -134,7 +134,7 @@ func TestInstanceConnectionExpiration(t *testing.T) {
 }
 
 func TestInstanceMaxConnections(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	stats := pool.GetPoolStats()
 	maxConnections, _ := stats["max_connections"].(int)
 	connections := make([]*sqlx.DB, 0)
@@ -157,7 +157,7 @@ func TestInstanceMaxConnections(t *testing.T) {
 }
 
 func TestInstancePoolReset(t *testing.T) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	ctx := context.Background()
 	db, err := pool.GetConnection(ctx)
 	if err != nil {
@@ -185,8 +185,8 @@ func TestInstancePoolReset(t *testing.T) {
 }
 
 func TestInstanceConnectionValidation(t *testing.T) {
-	pool := model.GetConnectionInstance()
-	conn := &model.PooledConnection{
+	pool := GetConnectionInstance()
+	conn := &PooledConnection{
 		DB:        nil,
 		CreatedAt: time.Now().Add(-1 * time.Hour),
 		LastUsed:  time.Now().Add(-30 * time.Minute),
@@ -205,7 +205,7 @@ func TestInstanceConnectionValidation(t *testing.T) {
 }
 
 func BenchmarkInstanceGetConnection(b *testing.B) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	ctx := context.Background()
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -220,7 +220,7 @@ func BenchmarkInstanceGetConnection(b *testing.B) {
 }
 
 func BenchmarkInstanceConcurrentOrderedMap(b *testing.B) {
-	pool := model.GetConnectionInstance()
+	pool := GetConnectionInstance()
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
