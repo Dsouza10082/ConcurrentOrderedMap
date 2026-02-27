@@ -1,4 +1,5 @@
-<img width="1536" height="1024" alt="gopher_doing_multiple_things_strong" src="https://github.com/user-attachments/assets/9cc7a8a4-9932-4bc6-8caf-fbf4e30b5866" />
+
+<img width="1536" height="1024" alt="gopher223" src="https://github.com/user-attachments/assets/f4a5e730-d172-451a-aca0-efcfb6350b5c" />
 
 # ConcurrentOrderedMap v2.0.0
 
