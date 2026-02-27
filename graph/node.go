@@ -10,7 +10,7 @@ import (
 	"math"
 	"sync"
 
-	com "github.com/Dsouza10082/ConcurrentOrderedMap"
+	com "github.com/Dsouza10082/ConcurrentOrderedMap/v2"
 )
 
 // EdgeData holds the metadata associated with a directed connection between

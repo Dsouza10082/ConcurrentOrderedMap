@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Dsouza10082/ConcurrentOrderedMap/graph"
-	"github.com/Dsouza10082/ConcurrentOrderedMap/persistence"
+	"github.com/Dsouza10082/ConcurrentOrderedMap/v2/graph"
+	"github.com/Dsouza10082/ConcurrentOrderedMap/v2/persistence"
 )
 
 // ─── Memory entry stored in the persistent map ───────────────────────────────

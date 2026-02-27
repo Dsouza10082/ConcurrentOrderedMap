@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	concurrentmap "github.com/Dsouza10082/ConcurrentOrderedMap"
+	concurrentmap "github.com/Dsouza10082/ConcurrentOrderedMap/v2"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 )

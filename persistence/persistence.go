@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	com "github.com/Dsouza10082/ConcurrentOrderedMap"
+	com "github.com/Dsouza10082/ConcurrentOrderedMap/v2"
 )
 
 // ─── Options ──────────────────────────────────────────────────────────────────

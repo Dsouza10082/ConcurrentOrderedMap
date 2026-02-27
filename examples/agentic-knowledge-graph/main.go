@@ -17,7 +17,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/Dsouza10082/ConcurrentOrderedMap/graph"
+	"github.com/Dsouza10082/ConcurrentOrderedMap/v2/graph"
 )
 
 // ─── Domain types ─────────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-module github.com/Dsouza10082/ConcurrentOrderedMap
+module github.com/Dsouza10082/ConcurrentOrderedMap/v2
 
 go 1.25.4
 

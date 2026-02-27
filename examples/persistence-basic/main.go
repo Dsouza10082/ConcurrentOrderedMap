@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Dsouza10082/ConcurrentOrderedMap/persistence"
+	"github.com/Dsouza10082/ConcurrentOrderedMap/v2/persistence"
 )
 
 // Product is the value type stored in the persistent map.

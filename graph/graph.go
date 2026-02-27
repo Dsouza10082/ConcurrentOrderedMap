@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	com "github.com/Dsouza10082/ConcurrentOrderedMap"
+	com "github.com/Dsouza10082/ConcurrentOrderedMap/v2"
 )
 
 // ErrNodeNotFound is returned when an operation references a missing node.
