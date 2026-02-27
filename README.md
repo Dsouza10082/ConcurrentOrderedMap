@@ -1,7 +1,7 @@
 
 <img width="1536" height="1024" alt="gopher223" src="https://github.com/user-attachments/assets/f4a5e730-d172-451a-aca0-efcfb6350b5c" />
 
-# ConcurrentOrderedMap v2.0.0
+# ConcurrentOrderedMap v2.0.2
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/Dsouza10082/ConcurrentOrderedMap.svg)](https://pkg.go.dev/github.com/Dsouza10082/ConcurrentOrderedMap)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -13,7 +13,7 @@ ConcurrentOrderedMap provides a thread-safe map implementation that preserves in
 ## Install
 
 ```bash
-go get github.com/Dsouza10082/ConcurrentOrderedMap@v2.0.0
+go get github.com/Dsouza10082/ConcurrentOrderedMap@v2.0.2
 ```
 
 ---
